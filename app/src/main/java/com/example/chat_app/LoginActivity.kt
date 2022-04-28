@@ -1,7 +1,9 @@
 package com.example.chat_app
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -16,24 +18,44 @@ class LoginActivity: AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         loginButton.setOnClickListener{
-            val email = email_edtText.text.toString()
-            val password = pass_editText.text.toString()
 
-            if(email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please enter text in email/password", Toast.LENGTH_SHORT).show()
-            }
+        }
 
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+        create_account_text.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    fun performLogin() {
+        val email = email_edtText.text.toString()
+        val password = pass_editText.text.toString()
+
+        if(email.isEmpty() || password.isEmpty()) {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener{
                     if(it.isSuccessful) {
+                        Log.d("firebase", "Successfully sign in user: ${it.result.user?.uid}")
 
+//                        Proceed to app
                     }
 
                 }
-                .addOnFailureListener{
-                    Toast.makeText(this, "Failed to login user: ${it.message}", Toast.LENGTH_SHORT).show()
-                }
+            Toast.makeText(this, "Please enter text in email/password", Toast.LENGTH_SHORT).show()
         }
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener{
+                if(it.isSuccessful) {
+
+                    Toast.makeText(this, "Successfully logged user: ${it.result.user?.uid}", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+            .addOnFailureListener{
+                Toast.makeText(this, "Failed to login user: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+
     }
 
 }

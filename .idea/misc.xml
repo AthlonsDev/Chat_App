@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/athlo/Desktop/Projects/Java/Chat_App/app/src/main/res/drawable/image_rounded.xml" value="0.3535" />
         <entry key="..\:/Users/athlo/Desktop/Projects/Java/Chat_App/app/src/main/res/drawable/rounded_button.xml" value="0.3535" />
         <entry key="..\:/Users/athlo/Desktop/Projects/Java/Chat_App/app/src/main/res/drawable/rounded_edittext.xml" value="0.3535" />
-        <entry key="..\:/Users/athlo/Desktop/Projects/Java/Chat_App/app/src/main/res/layout/activity_login.xml" value="0.3921875" />
+        <entry key="..\:/Users/athlo/Desktop/Projects/Java/Chat_App/app/src/main/res/layout/activity_login.xml" value="0.67" />
         <entry key="..\:/Users/athlo/Desktop/Projects/Java/Chat_App/app/src/main/res/layout/activity_main.xml" value="0.5541666666666667" />
       </map>
     </option>
