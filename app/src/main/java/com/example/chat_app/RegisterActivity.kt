@@ -3,14 +3,19 @@ package com.example.chat_app
 import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
+import java.net.URI
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,14 +45,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    var selectedPhotoUri: Uri? = null
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            val uri = data.data
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            selectedPhotoUri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
             val bitmapDrawable = BitmapDrawable(bitmap)
-            select_photo_button.setBackgroundDrawable(bitmapDrawable)
+            select_photo_button.setImageDrawable(bitmapDrawable)
+
         }
     }
 
@@ -69,6 +77,8 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d("firebase", "Successfully created user with uid: ${it.result.user?.uid}")
                 Toast.makeText(this, "Successfully created user with uid: ${it.result.user?.uid}", Toast.LENGTH_SHORT).show()
+
+                uploadImage()
             }
             .addOnFailureListener{
                 Log.d("firebase", "Failed to Create user: ${it.message}")
@@ -76,4 +86,41 @@ class MainActivity : AppCompatActivity() {
             }
 
     }
+
+    private fun uploadImage() {
+        if(selectedPhotoUri == null) return
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+        ref.putFile(selectedPhotoUri!!)
+            .addOnSuccessListener {
+                Log.d("firebase", "succesfully uploaded image: ${it.metadata?.path}")
+
+                ref.downloadUrl.addOnSuccessListener {
+
+                    Log.d("firebase", "File location: ${it.toString()}")
+
+
+
+                    saveUsertoDatabase(it.toString())
+                }
+            }
+            .addOnFailureListener{
+
+            }
+    }
+
+    private fun saveUsertoDatabase(profileImageUrl: String) {
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        val user = User(uid, username_edtText.text.toString(), profileImageUrl)
+
+        ref.setValue(user)
+            .addOnSuccessListener {
+                Log.d("firebase", "Saved user to Firebase Database")
+            }
+    }
 }
+
+
+class User( val uid: String, val username: String, val profileImageUrl: String)
