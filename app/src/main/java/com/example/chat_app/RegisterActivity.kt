@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.view.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -121,6 +121,10 @@ class MainActivity : AppCompatActivity() {
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d("firebase", "Saved user to Firebase Database")
+                val intent = Intent(this, LatestMessagesActivity::class.java)
+//                clear previous activity in stack
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
     }
 }
