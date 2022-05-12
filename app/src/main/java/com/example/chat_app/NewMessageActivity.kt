@@ -78,6 +78,7 @@ class UserItems(val user: User): Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 //        It will be called in our list for each user object
         viewHolder.itemView.textView_newmessages.text = user.username
+
     }
 
 }
