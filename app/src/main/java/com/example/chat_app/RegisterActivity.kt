@@ -129,5 +129,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 }
 
-
-class User( val uid: String, val username: String, val profileImageUrl: String)
+//TODO:Place this in a Model File
+class User( val uid: String, val username: String, val profileImageUrl: String) {
+    constructor() : this("", "", "")
+}
