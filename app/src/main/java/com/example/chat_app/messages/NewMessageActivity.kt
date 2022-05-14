@@ -1,21 +1,17 @@
-package com.example.chat_app
+package com.example.chat_app.messages
 
-import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.*
+import com.example.chat_app.R
+import com.example.chat_app.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_new_message.*
@@ -63,6 +59,13 @@ class NewMessageActivity : AppCompatActivity() {
                         adapter.add(UserItems(user))
                     }
                 }
+
+                adapter.setOnItemClickListener { item, view ->
+                    val intent = Intent(view.context, ChatLogActivity::class.java)
+                    startActivity(intent)
+
+                    finish()
+                }
                 recyclerview_newmessages.adapter = adapter
             }
         })
@@ -78,6 +81,8 @@ class UserItems(val user: User): Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 //        It will be called in our list for each user object
         viewHolder.itemView.textView_newmessages.text = user.username
+        val thumbnail = viewHolder.itemView.imageView_newmessages
+        Picasso.get().load(user.profileImageUrl).into(thumbnail)
 
     }
 

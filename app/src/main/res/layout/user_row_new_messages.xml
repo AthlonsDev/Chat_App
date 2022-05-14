@@ -3,22 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp">
 
     <TextView
         android:id="@+id/textView_newmessages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="24dp"
         android:text="TextView"
         android:textColor="@color/black"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_newmessages"
+        app:layout_constraintStart_toEndOf="@+id/imageView_newmessages"
+        app:layout_constraintTop_toTopOf="@+id/imageView_newmessages" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView_newmessages"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
