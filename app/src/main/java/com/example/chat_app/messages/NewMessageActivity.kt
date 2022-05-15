@@ -41,6 +41,10 @@ class NewMessageActivity : AppCompatActivity() {
         finish()
     }
 
+    companion object {
+        val USER_KEY = "USER_KEY"
+    }
+
     private fun fetchUsers() {
 //        Fetch Messages from Firebase Database
     val ref = FirebaseDatabase.getInstance().getReference("/users")
@@ -61,7 +65,11 @@ class NewMessageActivity : AppCompatActivity() {
                 }
 
                 adapter.setOnItemClickListener { item, view ->
+                    val userItem = item as UserItems
                     val intent = Intent(view.context, ChatLogActivity::class.java)
+                    intent.putExtra(USER_KEY, userItem.user.username)
+//                    Requires User Object(Model) to be Parcelable
+                    intent.putExtra(USER_KEY, userItem.user)
                     startActivity(intent)
 
                     finish()
