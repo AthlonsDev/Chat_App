@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chat_app.R
+import com.example.chat_app.messages.LatestMessagesActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_register.*
@@ -18,44 +19,36 @@ class LoginActivity: AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         loginButton.setOnClickListener{
-
+            performLogin()
         }
 
         create_account_text.setOnClickListener{
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+            finish()
         }
     }
 
-    fun performLogin() {
-        val email = email_edtText.text.toString()
-        val password = pass_editText.text.toString()
+    private fun performLogin() {
+        val email = email_edittext_login.text.toString()
+        val password = password_edittext_login.text.toString()
 
-        if(email.isEmpty() || password.isEmpty()) {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener{
-                    if(it.isSuccessful) {
-                        Log.d("firebase", "Successfully sign in user: ${it.result.user?.uid}")
-
-//                        Proceed to app
-                    }
-
-                }
-            Toast.makeText(this, "Please enter text in email/password", Toast.LENGTH_SHORT).show()
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please fill out email/pw.", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener{
-                if(it.isSuccessful) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                if (!it.isSuccessful) return@addOnCompleteListener
 
-                    Toast.makeText(this, "Successfully logged user: ${it.result.user?.uid}", Toast.LENGTH_SHORT).show()
-                }
+                Log.d("Login", "Successfully logged in: ${it.result.user?.uid}")
 
+                val intent = Intent(this, LatestMessagesActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
-            .addOnFailureListener{
-                Toast.makeText(this, "Failed to login user: ${it.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to log in: ${it.message}", Toast.LENGTH_SHORT).show()
             }
-
     }
 
 }
