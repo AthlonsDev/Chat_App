@@ -16,6 +16,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.activity_new_message.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 
 class ChatLogActivity : AppCompatActivity() {
@@ -42,7 +43,10 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun listenForMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("messages")
+
+        val fromId = FirebaseAuth.getInstance().uid
+        val toId = toUser?.uid
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
 //        new data that belongs to the reference above
         ref.addChildEventListener(object : ChildEventListener {
 
@@ -99,13 +103,20 @@ class ChatLogActivity : AppCompatActivity() {
             return
         }
 
-        val refernce = FirebaseDatabase.getInstance().getReference("/messages").push()
+        val refernce = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
 
         val chatMessage = ChatMessage(refernce.key!!, fromId, toId!!, text, System.currentTimeMillis())
         refernce.setValue(chatMessage)
             .addOnSuccessListener {
                 Log.d("Chat Message", "Saved Message")
+//                Clear Text field after hitting send
+                editText_messages.text.clear()
+//                Automatically scroll recycler view to the last message
+                messages_recycler_view.scrollToPosition(adapter.groupCount -1)
             }
+//        Creates the message for other user too
+        toReference.setValue(chatMessage)
     }
 
     override fun onBackPressed() {
