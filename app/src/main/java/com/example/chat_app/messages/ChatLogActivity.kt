@@ -117,6 +117,13 @@ class ChatLogActivity : AppCompatActivity() {
             }
 //        Creates the message for other user too
         toReference.setValue(chatMessage)
+
+//        set only new message to be stored in this directory
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        latestMessageRef.setValue(chatMessage)
+
+        val latestToMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        latestToMessageRef.setValue(chatMessage)
     }
 
     override fun onBackPressed() {
