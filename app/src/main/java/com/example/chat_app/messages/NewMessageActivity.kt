@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.chat_app.R
 import com.example.chat_app.models.User
+import com.example.chat_app.views.UserItems
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -80,18 +81,3 @@ class NewMessageActivity : AppCompatActivity() {
     }
 }
 
-class UserItems(val user: User): Item<GroupieViewHolder>() {
-
-    override fun getLayout(): Int {
-        return R.layout.user_row_new_messages
-    }
-
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-//        It will be called in our list for each user object
-        viewHolder.itemView.textView_newmessages.text = user.username
-        val thumbnail = viewHolder.itemView.imageView_newmessages
-        Picasso.get().load(user.profileImageUrl).into(thumbnail)
-
-    }
-
-}

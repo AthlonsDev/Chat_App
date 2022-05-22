@@ -6,6 +6,8 @@ import android.util.Log
 import com.example.chat_app.R
 import com.example.chat_app.models.ChatMessage
 import com.example.chat_app.models.User
+import com.example.chat_app.views.ChatFromItems
+import com.example.chat_app.views.ChatToItems
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -144,36 +146,3 @@ class ChatLogActivity : AppCompatActivity() {
 
 
 
-class ChatFromItems(val text: String, val user: User): Item<GroupieViewHolder>() {
-
-    override fun getLayout(): Int {
-        return R.layout.chat_from_row
-    }
-
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-
-        viewHolder.itemView.textView2.text = text
-        val uri = user.profileImageUrl
-        val target = viewHolder.itemView.imageView
-        Picasso.get().load(uri).into(target)
-
-    }
-
-}
-
-class ChatToItems(val text: String, val user: User): Item<GroupieViewHolder>() {
-
-    override fun getLayout(): Int {
-        return R.layout.chat_to_row
-    }
-
-    override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.textView2.text = text
-
-        val uri = user.profileImageUrl
-        val target = viewHolder.itemView.imageView
-        Picasso.get().load(uri).into(target)
-    }
-
-
-}
